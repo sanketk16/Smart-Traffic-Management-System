@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Traffic Management System Dashboard</title>
+</head>
+<body>
+    <h1>Traffic Management System Dashboard</h1>
+    <div id="trafficLightsStatus"></div>
+    <script>
+        function updateDashboard() {
+            fetch('/status')
+                .then(response => response.json())
+                .then(data => {
+                    const statusDiv = document.getElementById('trafficLightsStatus');
+                    statusDiv.innerHTML = '';
+                    for (const intersection in data) {
+                        const state = data[intersection];
+                        const stateElement = document.createElement('p');
+                        stateElement.textContent = `Intersection ${intersection}: ${state}`;
+                        statusDiv.appendChild(stateElement);
+                    }
+                })
+                .catch(error => console.error('Error fetching status:', error));
+        }
+        setInterval(updateDashboard, 5000);
+    </script>
+</body>
+</html>
