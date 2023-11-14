@@ -29,5 +29,7 @@ void update_traffic_light_state(TrafficLight *light);
 void update_all_traffic_lights();
 void print_all_traffic_light_states();
 void simulate_traffic_light_control_system();
+void write_traffic_states_to_file();
+
 
 #endif // TRAFFIC_LIGHT_H
