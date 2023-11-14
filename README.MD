@@ -1,55 +1,90 @@
-# **Smart Traffic Management System (STMS)**
+# Smart Traffic Management System
 
-## **Overview**
-**Smart Traffic Management System (STMS)** is a comprehensive solution designed to optimize traffic flow and enhance road safety through efficient control and monitoring of traffic lights at multiple intersections. It integrates real-time data handling, backend processing, frontend visualization, and predictive traffic analytics.
+## Overview
 
-## **Components**
+This Smart Traffic Management System dynamically adjusts traffic light timings based on traffic volume predictions. It consists of three main components:
 
-STMS consists of four key components:
+1. **Traffic Prediction Script (`predict_traffic.py`)**: Generates traffic volume predictions using historical data and an ARIMA model.
+2. **Traffic Light Control System (C Program)**: Manages the state of traffic lights and adjusts timings based on the predictions.
+3. **Web Dashboard (Flask App and Frontend)**: Displays the current traffic light status and predictions.
 
-1. **Backend**: A C program responsible for managing the state of each traffic light.
-2. **Frontend**: A web-based dashboard developed in HTML/JavaScript for real-time visualization of traffic light statuses.
-3. **Webserver**: A Flask application in Python, serving the frontend and providing an API for traffic light status.
-4. **Analytics**: A Python script for predicting traffic patterns, potentially aiding in optimizing traffic light timings.
+## 1. Traffic Prediction Script
 
-## **Getting Started**
+### Overview
 
-### **Prerequisites**
+The script `predict_traffic.py` predicts traffic volumes using an ARIMA (AutoRegressive Integrated Moving Average) model. It's a time series forecasting method that uses historical data to predict future values.
 
-- Python 3.x
-- Flask (install using `pip install flask`)
-- C Compiler (e.g., GCC for Linux)
-- Web Browser (e.g., Chrome, Firefox)
+### Implementation
 
-### **Installation and Setup**
+- The script generates simulated historical traffic data (to be replaced with real data for practical applications).
+- It uses the `pmdarima` package to find the best ARIMA model parameters and make predictions.
+- Predictions are written to `traffic_prediction.txt`, which is read by the Traffic Light Control System.
 
-1. **Backend Compilation**:
-   - Navigate to the `backend` directory.
-   - Run `make` to compile the C files into an executable.
-2. **Webserver Setup**:
-   - Navigate to the `webserver` directory.
-   - Run `python app.py` to start the Flask server.
-3. **Accessing the Frontend**:
-   - Open a web browser and visit `http://localhost:5000`.
+### Requirements
 
-## **Usage**
+- Python 3
+- `numpy` and `pmdarima` packages
 
-- Monitor the status of traffic lights via the frontend dashboard.
-- Ensure the backend program is running for real-time control and updates.
-- Utilize the analytics script for predictive traffic management insights.
+## 2. Traffic Light Control System
 
-## **Contributing**
+### Overview
 
-Contributions to STMS are welcome. Please follow these steps to contribute:
+A C program manages the traffic lights at various intersections. It reads the predicted traffic volumes and adjusts the green light duration accordingly.
 
-1. Fork the repository.
-2. Create a new feature branch (`git checkout -b feature/AmazingFeature`).
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`).
-4. Push to the branch (`git push origin feature/AmazingFeature`).
-5. Open a pull request.
+### Functionality
 
-## **License**
+- The program initializes the state of each traffic light and periodically updates them based on a timer.
+- It reads the latest traffic prediction from `traffic_prediction.txt` and adjusts the green light duration.
+- The current state and remaining time of each traffic light are written to `traffic_states.txt`.
 
-Distributed under the MIT License. See `LICENSE` file for more information.
+### Integration with Prediction Script
 
-Project Link: 
+- The C program continuously reads `traffic_prediction.txt` to get the latest traffic volume predictions.
+- The traffic light timings are adjusted in real-time based on these predictions.
+
+## 3. Web Dashboard
+
+### Overview
+
+A Flask-based web dashboard provides a real-time view of the traffic light states and the current traffic prediction.
+
+### Backend (Flask App)
+
+- The Flask app serves the current state of traffic lights and the latest traffic prediction.
+- It reads `traffic_states.txt` for traffic light information and `traffic_prediction.txt` for the prediction value.
+- The app provides endpoints (`/status` and `/prediction`) for the frontend to fetch this data.
+
+### Frontend
+
+- The frontend displays the current traffic light status for each intersection and the latest traffic prediction value.
+- JavaScript is used to periodically fetch and update this data from the Flask app.
+- The layout uses CSS for styling, ensuring that the traffic light status and prediction information are displayed in a user-friendly manner.
+
+## Setup and Running the System
+
+### Traffic Prediction Script
+
+1. Install necessary Python packages: `numpy` and `pmdarima`.
+2. Run `predict_traffic.py` to start generating traffic predictions.
+
+### Traffic Light Control System
+
+1. Compile the C program.
+2. Run the compiled executable to start managing traffic lights.
+
+### Web Dashboard
+
+1. Navigate to the Flask app directory.
+2. Run `flask run` to start the Flask server.
+3. Access the dashboard through the provided URL (typically `http://localhost:5000`).
+
+## Testing
+
+- Ensure all components are running simultaneously.
+- Observe the traffic light states and prediction updates on the web dashboard.
+
+## Future Enhancements
+
+- Integration with real-time traffic data sources.
+- Advanced data analytics for more accurate traffic predictions.
+- Implementation of machine learning models for prediction.

@@ -28,7 +28,7 @@ int main() {
 
         update_all_traffic_lights();
         print_all_traffic_light_states();
-        write_traffic_states_to_file(); // Update the file with states and remaining times
+        write_traffic_states_to_file();
         sleep(1); // Sleep for 1 second
     }
 

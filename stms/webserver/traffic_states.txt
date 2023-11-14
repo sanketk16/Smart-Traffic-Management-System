@@ -1,5 +1,5 @@
-Intersection 1: GREEN
-Intersection 2: GREEN
-Intersection 3: GREEN
-Intersection 4: GREEN
-Intersection 5: GREEN
+Intersection 0: YELLOW (Remaining Time: 1 seconds)
+Intersection 1: YELLOW (Remaining Time: 1 seconds)
+Intersection 2: YELLOW (Remaining Time: 1 seconds)
+Intersection 3: YELLOW (Remaining Time: 1 seconds)
+Intersection 4: YELLOW (Remaining Time: 1 seconds)

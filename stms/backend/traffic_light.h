@@ -15,6 +15,7 @@ typedef struct {
     unsigned int red_duration;
     unsigned int green_duration;
     unsigned int yellow_duration;
+    unsigned int remaining_time;
     bool emergency_mode; // Flag for emergency vehicle priority
     bool pedestrian_request; // Flag for pedestrian crossing request
 } TrafficLight;

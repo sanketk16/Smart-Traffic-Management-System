@@ -76,7 +76,7 @@ def handle_disconnect():
 </body>
 </html> -->
     
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -102,6 +102,194 @@ def handle_disconnect():
                 })
                 .catch(error => console.error('Error fetching status:', error));
         }
+        setInterval(updateDashboard, 5000);
+    </script>
+</body>
+</html>-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Traffic Management System Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        h1 {
+            color: #333;
+            margin-top: 20px;
+        }
+        #dashboard {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        .status {
+            margin: 10px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background-color: #fff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .prediction-impact {
+            margin-top: 15px;
+            font-style: italic;
+            color: #555;
+        }
+        .traffic-light {
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background-color: #fff;
+            text-align: left;
+        }
+        .signal {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+        .signal.red { background-color: #ff6666; }
+        .signal.green { background-color: #66ff66; }
+        .signal.yellow { background-color: #ffff66; }
+        .remaining-time {
+            display: inline;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1>Traffic Management System Dashboard</h1>
+    <div id="dashboard">
+        <div id="trafficPrediction" class="status"></div>
+        <div id="trafficLightsStatus" class="status"></div>
+    </div>
+    <script>
+        function updateDashboard() {
+            // Update traffic light status
+            // fetch('/status')
+            //     .then(response => response.json())
+            //     .then(data => {
+            //         const statusDiv = document.getElementById('trafficLightsStatus');
+            //         statusDiv.innerHTML = '<h2>Traffic Light Status</h2>';
+            //         for (const intersection in data) {
+            //             const state = data[intersection];
+            //             const stateElement = document.createElement('p');
+            //             stateElement.innerHTML = `Intersection ${intersection}: ${stateInfo.state} 
+            //                               <span class="timer">Remaining Time: ${stateInfo.remaining_time} seconds</span>`;
+            //             // stateElement.textContent = `Intersection ${intersection}: ${state}`;
+            //             statusDiv.appendChild(stateElement);
+            //         }
+            //     })
+            //     .catch(error => console.error('Error fetching status:', error));
+
+            // // Fetch and update traffic prediction
+            // // fetch('/prediction')  // Make sure to implement this endpoint in your Flask app
+            // //     .then(response => response.json())
+            // //     .then(predictionData => {
+            // //         const predictionDiv = document.getElementById('trafficPrediction');
+            // //         predictionDiv.innerHTML = '<h2>Current Traffic Prediction</h2>';
+            // //         const predictionElement = document.createElement('p');
+            // //         predictionElement.textContent = `Prediction Value: ${predictionData.value}`;
+            // //         predictionDiv.appendChild(predictionElement);
+            // //     })
+            // //     .catch(error => console.error('Error fetching prediction:', error));
+            
+            // // Fetch and update traffic prediction
+            // fetch('/prediction')  // Ensure this endpoint is implemented in your Flask app
+            //     .then(response => response.json())
+            //     .then(predictionData => {
+            //         const predictionDiv = document.getElementById('trafficPrediction');
+            //         predictionDiv.innerHTML = '<h2>Current Traffic Prediction</h2>';
+            //         const predictionElement = document.createElement('p');
+            //         predictionElement.textContent = `Prediction Value: ${predictionData.value}`;
+            //         predictionDiv.appendChild(predictionElement);
+
+            //         // Add interpretation of the prediction
+            //         const impactElement = document.createElement('div');
+            //         impactElement.classList.add('prediction-impact');
+            //         impactElement.textContent = interpretPrediction(predictionData.value);
+            //         predictionDiv.appendChild(impactElement);
+            //     })
+            //     .catch(error => console.error('Error fetching prediction:', error));
+
+            // Update traffic light status
+            // fetch('/status')
+            //     .then(response => response.json())
+            //     .then(data => {
+            //         const statusDiv = document.getElementById('trafficLightsStatus');
+            //         statusDiv.innerHTML = '<h2>Traffic Light Status</h2>';
+            //         for (const intersection in data) {
+            //             const stateInfo = data[intersection];
+            //             const stateElement = document.createElement('p');
+            //             stateElement.innerHTML = `Intersection ${intersection}: ${stateInfo.state} 
+            //                 <span class="timer">Remaining Time: ${stateInfo.remaining_time} seconds</span>`;
+            //             statusDiv.appendChild(stateElement);
+            //         }
+            //     })
+            //     .catch(error => console.error('Error fetching status:', error));
+
+            fetch('/status')
+                .then(response => response.json())
+                .then(data => {
+                    const statusDiv = document.getElementById('trafficLightsStatus');
+                    statusDiv.innerHTML = '<h2>Traffic Light Status</h2>';
+                    for (const intersection in data) {
+                        const stateInfo = data[intersection];
+                        const lightDiv = document.createElement('div');
+                        lightDiv.classList.add('traffic-light');
+
+                        const signalDiv = document.createElement('div');
+                        signalDiv.classList.add('signal', stateInfo.state.toLowerCase());
+
+                        const textSpan = document.createElement('span');
+                        textSpan.innerHTML = `Intersection ${intersection}: <span class="remaining-time">${stateInfo.remaining_time} seconds</span>`;
+
+                        lightDiv.appendChild(signalDiv);
+                        lightDiv.appendChild(textSpan);
+                        statusDiv.appendChild(lightDiv);
+                    }
+                })
+                .catch(error => console.error('Error fetching status:', error));
+
+            // Fetch and update traffic prediction
+            fetch('/prediction')  // Ensure this endpoint is implemented in your Flask app
+                .then(response => response.json())
+                .then(predictionData => {
+                    const predictionDiv = document.getElementById('trafficPrediction');
+                    predictionDiv.innerHTML = '<h2>Current Traffic Prediction</h2>';
+                    const predictionElement = document.createElement('p');
+                    predictionElement.textContent = `Prediction Value: ${predictionData.value}`;
+                    predictionDiv.appendChild(predictionElement);
+
+                    // Add interpretation of the prediction
+                    const impactElement = document.createElement('div');
+                    impactElement.classList.add('prediction-impact');
+                    impactElement.textContent = interpretPrediction(predictionData.value);
+                    predictionDiv.appendChild(impactElement);
+                })
+                .catch(error => console.error('Error fetching prediction:', error));
+        }
+
+        function interpretPrediction(value) {
+            // Interpret the prediction value and explain its impact
+            if (value > 50) {
+                return "Higher traffic volume predicted. Green light duration may be increased for smoother flow.";
+            } else {
+                return "Lower traffic volume predicted. Green light duration may be reduced to optimize flow.";
+            }
+        }
+
         setInterval(updateDashboard, 5000);
     </script>
 </body>
