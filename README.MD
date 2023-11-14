@@ -29,7 +29,7 @@ The script `predict_traffic.py` predicts traffic volumes using an ARIMA (AutoReg
 
 ### Overview
 
-A C program manages the traffic lights at various intersections. It reads the predicted traffic volumes and adjusts the green light duration accordingly.
+This project manages the traffic lights at various intersections. It reads the predicted traffic volumes and adjusts the green light duration accordingly.
 
 ### Functionality
 
