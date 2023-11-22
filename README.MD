@@ -5,7 +5,7 @@
 This Smart Traffic Management System dynamically adjusts traffic light timings based on traffic volume predictions. It consists of three main components:
 
 1. **Traffic Prediction Script (`predict_traffic.py`)**: Generates traffic volume predictions using historical data and an ARIMA model.
-2. **Traffic Light Control System (C Program)**: Manages the state of traffic lights and adjusts timings based on the predictions.
+2. **Traffic Light Control System (C)**: Manages the state of traffic lights and adjusts timings based on the predictions.
 3. **Web Dashboard (Flask App and Frontend)**: Displays the current traffic light status and predictions.
 
 ## 1. Traffic Prediction Script
@@ -29,7 +29,7 @@ The script `predict_traffic.py` predicts traffic volumes using an ARIMA (AutoReg
 
 ### Overview
 
-A C program manages the traffic lights at various intersections. It reads the predicted traffic volumes and adjusts the green light duration accordingly.
+This project manages the traffic lights at various intersections. It reads the predicted traffic volumes and adjusts the green light duration accordingly.
 
 ### Functionality
 
