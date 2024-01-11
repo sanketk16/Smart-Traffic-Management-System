@@ -56,9 +56,10 @@ A Flask-based web dashboard provides a real-time view of the traffic light state
 
 ### Frontend
 
-- The frontend displays the current traffic light status for each intersection and the latest traffic prediction value.
-- JavaScript is used to periodically fetch and update this data from the Flask app.
-- The layout uses CSS for styling, ensuring that the traffic light status and prediction information are displayed in a user-friendly manner.
+- Displays the current traffic light status for each intersection and the latest traffic prediction value.
+- Uses JavaScript to periodically fetch and update data from the Flask app.
+- The layout has been enhanced to include a visual representation of traffic lights and a more interactive and user-friendly display of traffic predictions.
+- Incorporates CSS styling for a clearer and more intuitive presentation.
 
 ## Setup and Running the System
 
