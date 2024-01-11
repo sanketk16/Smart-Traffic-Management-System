@@ -107,7 +107,8 @@ def handle_disconnect():
 </body>
 </html>-->
 
-<!DOCTYPE html>
+<!-- 3 -->
+<!-- <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -176,69 +177,6 @@ def handle_disconnect():
     </div>
     <script>
         function updateDashboard() {
-            // Update traffic light status
-            // fetch('/status')
-            //     .then(response => response.json())
-            //     .then(data => {
-            //         const statusDiv = document.getElementById('trafficLightsStatus');
-            //         statusDiv.innerHTML = '<h2>Traffic Light Status</h2>';
-            //         for (const intersection in data) {
-            //             const state = data[intersection];
-            //             const stateElement = document.createElement('p');
-            //             stateElement.innerHTML = `Intersection ${intersection}: ${stateInfo.state} 
-            //                               <span class="timer">Remaining Time: ${stateInfo.remaining_time} seconds</span>`;
-            //             // stateElement.textContent = `Intersection ${intersection}: ${state}`;
-            //             statusDiv.appendChild(stateElement);
-            //         }
-            //     })
-            //     .catch(error => console.error('Error fetching status:', error));
-
-            // // Fetch and update traffic prediction
-            // // fetch('/prediction')  // Make sure to implement this endpoint in your Flask app
-            // //     .then(response => response.json())
-            // //     .then(predictionData => {
-            // //         const predictionDiv = document.getElementById('trafficPrediction');
-            // //         predictionDiv.innerHTML = '<h2>Current Traffic Prediction</h2>';
-            // //         const predictionElement = document.createElement('p');
-            // //         predictionElement.textContent = `Prediction Value: ${predictionData.value}`;
-            // //         predictionDiv.appendChild(predictionElement);
-            // //     })
-            // //     .catch(error => console.error('Error fetching prediction:', error));
-            
-            // // Fetch and update traffic prediction
-            // fetch('/prediction')  // Ensure this endpoint is implemented in your Flask app
-            //     .then(response => response.json())
-            //     .then(predictionData => {
-            //         const predictionDiv = document.getElementById('trafficPrediction');
-            //         predictionDiv.innerHTML = '<h2>Current Traffic Prediction</h2>';
-            //         const predictionElement = document.createElement('p');
-            //         predictionElement.textContent = `Prediction Value: ${predictionData.value}`;
-            //         predictionDiv.appendChild(predictionElement);
-
-            //         // Add interpretation of the prediction
-            //         const impactElement = document.createElement('div');
-            //         impactElement.classList.add('prediction-impact');
-            //         impactElement.textContent = interpretPrediction(predictionData.value);
-            //         predictionDiv.appendChild(impactElement);
-            //     })
-            //     .catch(error => console.error('Error fetching prediction:', error));
-
-            // Update traffic light status
-            // fetch('/status')
-            //     .then(response => response.json())
-            //     .then(data => {
-            //         const statusDiv = document.getElementById('trafficLightsStatus');
-            //         statusDiv.innerHTML = '<h2>Traffic Light Status</h2>';
-            //         for (const intersection in data) {
-            //             const stateInfo = data[intersection];
-            //             const stateElement = document.createElement('p');
-            //             stateElement.innerHTML = `Intersection ${intersection}: ${stateInfo.state} 
-            //                 <span class="timer">Remaining Time: ${stateInfo.remaining_time} seconds</span>`;
-            //             statusDiv.appendChild(stateElement);
-            //         }
-            //     })
-            //     .catch(error => console.error('Error fetching status:', error));
-
             fetch('/status')
                 .then(response => response.json())
                 .then(data => {
@@ -293,4 +231,196 @@ def handle_disconnect():
         setInterval(updateDashboard, 5000);
     </script>
 </body>
+</html>-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Traffic Management System Dashboard - Boston</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/leaflet.css" />
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        h1 {
+            color: #333;
+            margin-top: 20px;
+        }
+        #dashboard {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        .status {
+            margin: 10px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background-color: #fff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            width: 80%;
+            max-width: 800px;
+        }
+        #realTimeTrafficMap {
+            height: 400px; /* Set a height for the map */
+            width: 100%;
+        }
+        .chart-container {
+            position: relative;
+            height: 40vh;
+            width: 80%;
+            max-width: 800px;
+        }
+        .traffic-light {
+            margin: 10px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background-color: #fff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            text-align: left;
+        }
+        .light {
+            height: 15px;
+            width: 15px;
+            border-radius: 50%;
+            display: inline-block;
+            margin: 2px;
+        }
+        .red { background-color: #ff6666; }
+        .yellow { background-color: #ffff66; }
+        .green { background-color: #66ff66; }
+    </style>
+</head>
+<body>
+    <h1>Traffic Management System Dashboard - Boston</h1>
+    <div id="dashboard">
+        <div id="trafficPrediction" class="status">
+            <h2>Real-Time Traffic Prediction</h2>
+            <div class="chart-container">
+                <canvas id="trafficPredictionChart"></canvas>
+            </div>
+        </div>
+        <div id="trafficLightsStatus" class="status">
+            <h2>Traffic Lights Status</h2>
+            <!-- Traffic lights status will be dynamically inserted here -->
+        </div>
+        <div id="realTimeTrafficMap" class="status">
+            <h2>Real-Time Traffic Map - Boston</h2>
+            <!-- Real-time traffic map will be embedded here -->
+        </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/leaflet.js"></script>
+    <script>
+        function createTrafficPredictionChart() {
+            var ctx = document.getElementById('trafficPredictionChart').getContext('2d');
+            return new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: [],
+                    datasets: [{
+                        label: 'Traffic Prediction',
+                        data: [],
+                        backgroundColor: 'rgba(0, 123, 255, 0.5)',
+                        borderColor: 'rgba(0, 123, 255, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        yAxes: [{
+                            ticks: {
+                                beginAtZero: true
+                            }
+                        }]
+                    }
+                }
+            });
+        }
+
+        function updateChartData(chart, label, data) {
+            chart.data.labels.push(label);
+            chart.data.datasets.forEach((dataset) => {
+                dataset.data.push(data);
+            });
+            chart.update();
+        }
+
+        function updatePredictionChart(chart) {
+            fetch('/prediction')
+                .then(response => response.json())
+                .then(predictionData => {
+                    var currentTime = new Date().toLocaleTimeString();
+                    updateChartData(chart, currentTime, predictionData.value);
+                })
+                .catch(error => console.error('Error fetching prediction:', error));
+        }
+
+        function updateTrafficLightsStatus() {
+            fetch('/status')
+                .then(response => response.json())
+                .then(data => {
+                    const statusDiv = document.getElementById('trafficLightsStatus');
+                    statusDiv.innerHTML = ''; // Clear previous content
+                    Object.keys(data).forEach(intersection => {
+                        const stateInfo = data[intersection];
+                        const lightDiv = document.createElement('div');
+                        lightDiv.classList.add('traffic-light');
+
+                        const createLightElement = (color, isActive) => {
+                            const light = document.createElement('span');
+                            light.classList.add('light', color);
+                            // Set the opacity to 1 if active, otherwise 0.3
+                            light.style.opacity = isActive ? '1' : '0.3';
+                            return light;
+                        };
+
+                        // Highlight the correct light based on the state
+                        lightDiv.appendChild(createLightElement('red', stateInfo.state === 'RED'));
+                        lightDiv.appendChild(createLightElement('yellow', stateInfo.state === 'YELLOW'));
+                        lightDiv.appendChild(createLightElement('green', stateInfo.state === 'GREEN'));
+
+                        const textSpan = document.createElement('span');
+                        textSpan.textContent = ` Intersection ${intersection} - ${stateInfo.state} - Remaining Time: ${stateInfo.remaining_time} seconds`;
+                        lightDiv.appendChild(textSpan);
+
+                        statusDiv.appendChild(lightDiv);
+                    });
+                })
+                .catch(error => console.error('Error fetching traffic lights status:', error));
+        }
+
+
+
+        function embedRealTimeTrafficMap() {
+            var map = L.map('realTimeTrafficMap').setView([42.3601, -71.0589], 13); // Coordinates for Boston
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                maxZoom: 19,
+                attribution: '© OpenStreetMap contributors'
+            }).addTo(map);
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            var trafficPredictionChart = createTrafficPredictionChart();
+            embedRealTimeTrafficMap();
+            setInterval(() => {
+                updatePredictionChart(trafficPredictionChart);
+                updateTrafficLightsStatus();
+            }, 5000);
+        });
+    </script>
+</body>
 </html>
+
+
+
+

@@ -226,6 +226,15 @@ def get_prediction():
     else:
         return jsonify({"error": "Traffic prediction file not found."})
 
+# @app.route('/prediction')
+# def get_prediction():
+#     try:
+#         with open('../webserver/traffic_prediction.txt', 'r') as file:
+#             prediction = file.readline().strip()
+#             return jsonify({'value': int(prediction)})
+#     except Exception as e:
+#         return jsonify({'error': str(e)}), 500
+
 @app.route('/')
 def index():
     return send_from_directory(app.static_folder, 'index.html')
