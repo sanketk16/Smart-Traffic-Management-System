@@ -210,19 +210,26 @@ def generate_historical_data(size=1000):
         
     return np.array(data)
 
+historical_data = generate_historical_data(size=1000)
+print(historical_data[:50])  # Print the first 50 data points to check variability
+
 def predict_traffic_arima(historical_data):
     try:
         model = pm.auto_arima(historical_data, seasonal=True, m=7, error_action='ignore', suppress_warnings=True)
         prediction = model.predict(n_periods=1)[0]
         
         # Increase prediction variability
-        prediction_noise = np.random.normal(0, 15)  # Increase the standard deviation
+        prediction_noise = np.random.normal(0, 20)  # Increase the standard deviation
         prediction += prediction_noise
         
         return max(0, prediction)
     except Exception as e:
         logging.error(f"Error in model prediction: {e}")
         return 0
+    
+historical_data = generate_historical_data(size=1000)
+prediction = predict_traffic_arima(historical_data)
+print(prediction)  # Print the prediction to check if it changes
 
 def main():
     while True:
