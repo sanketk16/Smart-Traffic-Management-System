@@ -309,6 +309,9 @@ def handle_disconnect():
                 <canvas id="trafficPredictionChart"></canvas>
             </div>
         </div>
+
+        <span id="greenDurationInfo"></span>
+
         <div id="trafficLightsStatus" class="status">
             <h2>Traffic Lights Status</h2>
             <!-- Traffic lights status will be dynamically inserted here -->
@@ -380,7 +383,7 @@ def handle_disconnect():
                             const light = document.createElement('span');
                             light.classList.add('light', color);
                             // Set the opacity to 1 if active, otherwise 0.3
-                            light.style.opacity = isActive ? '1' : '0.3';
+                            light.style.opacity = isActive ? '1' : '0.2';
                             return light;
                         };
 
@@ -390,10 +393,18 @@ def handle_disconnect():
                         lightDiv.appendChild(createLightElement('green', stateInfo.state === 'GREEN'));
 
                         const textSpan = document.createElement('span');
-                        textSpan.textContent = ` Intersection ${intersection} - ${stateInfo.state} - Remaining Time: ${stateInfo.remaining_time} seconds`;
+                        textSpan.textContent = ` ${intersection}: ${stateInfo.state} (Remaining Time: ${stateInfo.remaining_time} seconds)`;
                         lightDiv.appendChild(textSpan);
 
                         statusDiv.appendChild(lightDiv);
+
+                        // Display green light duration information
+                        // const greenDurationInfo = document.createElement('span');
+                        // greenDurationInfo.id = 'greenDurationInfo';
+                        // greenDurationInfo.textContent = ` - Green Duration: ${stateInfo.green_duration} seconds (Predicted: ${stateInfo.predicted_green_duration} seconds)`;
+                        // lightDiv.appendChild(greenDurationInfo);
+
+                        // statusDiv.appendChild(lightDiv);
                     });
                 })
                 .catch(error => console.error('Error fetching traffic lights status:', error));
@@ -415,7 +426,7 @@ def handle_disconnect():
             setInterval(() => {
                 updatePredictionChart(trafficPredictionChart);
                 updateTrafficLightsStatus();
-            }, 5000);
+            }, 1000);
         });
     </script>
 </body>

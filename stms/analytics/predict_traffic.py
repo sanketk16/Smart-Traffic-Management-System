@@ -96,6 +96,7 @@ import time
 import logging
 from datetime import datetime
 import os
+import random
 
 # Configure logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -104,23 +105,120 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(
 #     # Generate more realistic data (you can replace this with actual historical data)
 #     return np.random.randint(0, 100, size=size)
 
+# def generate_historical_data(size=1000):
+#     # Simulate more realistic data with peaks (e.g., rush hours) and troughs (e.g., night time)
+#     data = []
+#     for i in range(size):
+#         if i % 24 in [8, 9, 17, 18]:  # Simulate rush hours
+#             data.append(np.random.randint(60, 100))
+#         elif i % 24 in [0, 1, 2, 3]:  # Simulate late night
+#             data.append(np.random.randint(0, 30))
+#         else:
+#             data.append(np.random.randint(30, 60))
+#     return np.array(data)
+
+# def generate_historical_data(size=1000):
+#     # Simulate more realistic data with peaks (e.g., rush hours), troughs (e.g., night time), and some randomness
+#     data = []
+#     for i in range(size):
+#         base_traffic = np.random.randint(20, 40)  # Base traffic volume
+#         random_noise = np.random.normal(0, 5)  # Random noise to add variability
+        
+#         if i % 24 in [8, 9, 17, 18]:  # Simulate rush hours
+#             rush_hour_traffic = np.random.randint(60, 100)
+#             data.append(rush_hour_traffic + random_noise)
+#         elif i % 24 in [0, 1, 2, 3]:  # Simulate late night
+#             late_night_traffic = np.random.randint(0, 30)
+#             data.append(late_night_traffic + random_noise)
+#         else:
+#             # Normal hours with some base traffic and random noise
+#             data.append(base_traffic + random_noise)
+            
+#         # Ensure that traffic values don't go below 0 or above 100
+#         data[-1] = max(0, min(data[-1], 100))
+        
+#     return np.array(data)
+
+
+# def predict_traffic_arima(historical_data):
+#     try:
+#         model = pm.auto_arima(historical_data, seasonal=True, m=7, error_action='ignore', suppress_warnings=True)
+#         prediction = model.predict(n_periods=1)[0]
+#         return max(0, prediction)
+#     except Exception as e:
+#         logging.error(f"Error in model prediction: {e}")
+#         return 0
+
+# def generate_historical_data(size=1000):
+#     data = []
+#     for i in range(size):
+#         base_traffic = np.random.randint(20, 40)
+#         random_noise = np.random.normal(0, 5)
+#         weather_impact = random.choice([0, np.random.randint(0, 10)])  # Randomly simulate bad weather conditions
+#         event_impact = random.choice([0, np.random.randint(0, 20) if i % 24 == 15 else 0])  # Simulate events impacting traffic at a certain hour
+        
+#         if i % 24 in [8, 9, 17, 18]:  # Simulate rush hours
+#             rush_hour_traffic = np.random.randint(60, 100)
+#             data.append(rush_hour_traffic + random_noise - weather_impact - event_impact)
+#         elif i % 24 in [0, 1, 2, 3]:  # Simulate late night
+#             late_night_traffic = np.random.randint(0, 30)
+#             data.append(late_night_traffic + random_noise - weather_impact)
+#         else:
+#             # Normal hours with some base traffic and random noise
+#             data.append(base_traffic + random_noise - weather_impact)
+        
+#         data[-1] = max(0, min(data[-1], 100))  # Ensure that traffic values don't go below 0 or above 100
+        
+#     return np.array(data)
+
+# def predict_traffic_arima(historical_data):
+#     try:
+#         model = pm.auto_arima(historical_data, seasonal=True, m=7, error_action='ignore', suppress_warnings=True)
+#         prediction = model.predict(n_periods=1)[0]
+        
+#         # Introduce prediction variability
+#         prediction_noise = np.random.normal(0, 10)  # Adjust the standard deviation as needed
+#         prediction += prediction_noise
+        
+#         return max(0, prediction)
+#     except Exception as e:
+#         logging.error(f"Error in model prediction: {e}")
+#         return 0
+
 def generate_historical_data(size=1000):
-    # Simulate more realistic data with peaks (e.g., rush hours) and troughs (e.g., night time)
     data = []
     for i in range(size):
+        base_traffic = np.random.randint(20, 40)
+        random_noise = np.random.normal(0, 10)  # Increase standard deviation for more noise
+        weather_impact = random.choice([0, np.random.randint(5, 15)])  # Increase range for weather impact
+        event_impact = random.choice([0, np.random.randint(10, 30) if i % 24 == 15 else 0])  # Increase range for event impact
+        
+        # Introduce additional fluctuations
+        fluctuation = np.random.choice([-1, 1]) * np.random.randint(0, 15)
+        
         if i % 24 in [8, 9, 17, 18]:  # Simulate rush hours
-            data.append(np.random.randint(60, 100))
+            rush_hour_traffic = np.random.randint(50, 100)  # Adjust range for more fluctuation
+            data.append(rush_hour_traffic + random_noise - weather_impact - event_impact + fluctuation)
         elif i % 24 in [0, 1, 2, 3]:  # Simulate late night
-            data.append(np.random.randint(0, 30))
+            late_night_traffic = np.random.randint(0, 30)
+            data.append(late_night_traffic + random_noise - weather_impact + fluctuation)
         else:
-            data.append(np.random.randint(30, 60))
+            # Normal hours with some base traffic, random noise, and additional fluctuation
+            data.append(base_traffic + random_noise - weather_impact + fluctuation)
+        
+        data[-1] = max(0, min(data[-1], 100))  # Ensure that traffic values don't go below 0 or above 100
+        
     return np.array(data)
-
 
 def predict_traffic_arima(historical_data):
     try:
         model = pm.auto_arima(historical_data, seasonal=True, m=7, error_action='ignore', suppress_warnings=True)
         prediction = model.predict(n_periods=1)[0]
+        
+        # Increase prediction variability
+        prediction_noise = np.random.normal(0, 15)  # Increase the standard deviation
+        prediction += prediction_noise
+        
         return max(0, prediction)
     except Exception as e:
         logging.error(f"Error in model prediction: {e}")

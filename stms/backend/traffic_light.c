@@ -147,35 +147,66 @@ void initialize_traffic_lights() {
 //     }
 // }
 
+//U
+// void read_and_adjust_traffic_light_timings() {
+//     // FILE *file = fopen("traffic_prediction.txt", "r");
+//     FILE *file = fopen("./webserver/traffic_prediction.txt", "r");
+//     if (file != NULL) {
+//         float traffic_prediction;
+//         fscanf(file, "%f", &traffic_prediction);
+//         fclose(file);
+
+//         // Define minimum and maximum durations for green light
+//         const int min_green_duration = 5;  // Minimum green light duration in seconds
+//         const int max_green_duration = 20; // Maximum green light duration in seconds
+
+//         // Define the scale of prediction values (adjust as needed)
+//         const float max_prediction_value = 100.0;
+
+//         // Scale the duration of the green light based on the traffic prediction
+//         float scale_factor = traffic_prediction / max_prediction_value;
+//         GREEN_DURATION = (int)(min_green_duration + (max_green_duration - min_green_duration) * scale_factor);
+
+//         // Ensure that the green duration is within the defined bounds
+//         if (GREEN_DURATION < min_green_duration) {
+//             GREEN_DURATION = min_green_duration;
+//         }
+//         if (GREEN_DURATION > max_green_duration) {
+//             GREEN_DURATION = max_green_duration;
+//         }
+//     } else {
+//         perror("Error opening traffic prediction file");
+//     }
+// }
+
 void read_and_adjust_traffic_light_timings() {
-    FILE *file = fopen("traffic_prediction.txt", "r");
+    FILE *file = fopen("../webserver/traffic_prediction.txt", "r");
     if (file != NULL) {
         float traffic_prediction;
         fscanf(file, "%f", &traffic_prediction);
         fclose(file);
 
-        // Define minimum and maximum durations for green light
-        const int min_green_duration = 5;  // Minimum green light duration in seconds
-        const int max_green_duration = 20; // Maximum green light duration in seconds
-
-        // Define the scale of prediction values (adjust as needed)
+        const int min_green_duration = 5;
+        const int max_green_duration = 20;
         const float max_prediction_value = 100.0;
 
-        // Scale the duration of the green light based on the traffic prediction
         float scale_factor = traffic_prediction / max_prediction_value;
         GREEN_DURATION = (int)(min_green_duration + (max_green_duration - min_green_duration) * scale_factor);
 
-        // Ensure that the green duration is within the defined bounds
         if (GREEN_DURATION < min_green_duration) {
             GREEN_DURATION = min_green_duration;
         }
         if (GREEN_DURATION > max_green_duration) {
             GREEN_DURATION = max_green_duration;
         }
+
+        // Print the new GREEN_DURATION for debugging
+        printf("New GREEN_DURATION based on prediction: %d\n", GREEN_DURATION);
     } else {
         perror("Error opening traffic prediction file");
     }
 }
+
 
 // Update the state of a single traffic light
 // void update_traffic_light_state(TrafficLight *light) {
@@ -200,6 +231,40 @@ void read_and_adjust_traffic_light_timings() {
 // }
 
 // Update the state of a single traffic light and calculate the remaining time
+// U
+// void update_traffic_light_state(TrafficLight *light) {
+//     time_t current_time = time(NULL);
+//     double elapsed = difftime(current_time, light->last_change_time);
+//     int remaining_time = 0;
+
+//     if (light->state == RED) {
+//         remaining_time = light->red_duration - (int)elapsed;
+//         if (remaining_time <= 0) {
+//             light->state = GREEN;
+//             light->last_change_time = current_time;
+//             light->green_duration = GREEN_DURATION; // Update duration based on prediction
+//             remaining_time = light->green_duration;
+//         }
+//     } else if (light->state == GREEN) {
+//         remaining_time = light->green_duration - (int)elapsed;
+//         if (remaining_time <= 0) {
+//             light->state = YELLOW;
+//             light->last_change_time = current_time;
+//             remaining_time = light->yellow_duration;
+//         }
+//     } else if (light->state == YELLOW) {
+//         remaining_time = light->yellow_duration - (int)elapsed;
+//         if (remaining_time <= 0) {
+//             light->state = RED;
+//             light->last_change_time = current_time;
+//             light->red_duration = RED_DURATION; // Update duration based on prediction
+//             remaining_time = light->red_duration;
+//         }
+//     }
+
+//     light->remaining_time = remaining_time > 0 ? remaining_time : 0;
+// }
+
 void update_traffic_light_state(TrafficLight *light) {
     time_t current_time = time(NULL);
     double elapsed = difftime(current_time, light->last_change_time);
@@ -210,7 +275,7 @@ void update_traffic_light_state(TrafficLight *light) {
         if (remaining_time <= 0) {
             light->state = GREEN;
             light->last_change_time = current_time;
-            light->green_duration = GREEN_DURATION; // Update duration based on prediction
+            light->green_duration = GREEN_DURATION;
             remaining_time = light->green_duration;
         }
     } else if (light->state == GREEN) {
@@ -225,13 +290,14 @@ void update_traffic_light_state(TrafficLight *light) {
         if (remaining_time <= 0) {
             light->state = RED;
             light->last_change_time = current_time;
-            light->red_duration = RED_DURATION; // Update duration based on prediction
+            light->red_duration = RED_DURATION;
             remaining_time = light->red_duration;
         }
     }
 
     light->remaining_time = remaining_time > 0 ? remaining_time : 0;
 }
+
 
 
 
