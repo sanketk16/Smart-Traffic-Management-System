@@ -2,6 +2,8 @@
 
 ## Overview
 
+test
+
 This Smart Traffic Management System dynamically adjusts traffic light timings based on traffic volume predictions. It consists of three main components:
 
 1. **Traffic Prediction Script (`predict_traffic.py`)**: Generates traffic volume predictions using historical data and an ARIMA model.
